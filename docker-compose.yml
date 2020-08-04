@@ -1,0 +1,11 @@
+version: "3.7"
+
+services:
+  redirector:
+    build:
+      context: .
+    ports:
+    - "80:80"
+    environment:
+      NEW_HOST: something.new
+      PORT: 80
