@@ -49,7 +49,7 @@ func Test_serveTemplate(t *testing.T) {
 			wantStatus: 200,
 			wantInBody: []string{
 				"<em>old.url.com</em> has changed to <em>new.url.com</em>",
-				"https://new.url.com/path/to/page",
+				"href=\"https://new.url.com/path/to/page\"",
 			},
 			notWantInBody: []string{
 				"https://old.url.com/path/to/page",
@@ -117,7 +117,7 @@ func Test_serveTemplate(t *testing.T) {
 			wantStatus: 200,
 			wantInBody: []string{
 				"https://moreinforurl.com",
-				"https://new.url.com/path/to/page?param1=something&amp;param2=something&#43;else",
+				"href=\"https://new.url.com/path/to/page?param1=something&amp;param2=something&#43;else\"",
 				"22 Aug 2020",
 				"Hi there, we've changed old.url.com to new.url.com, get with the program!",
 			},

@@ -70,10 +70,15 @@ func serveTemplate(w http.ResponseWriter, r *http.Request) {
 }
 
 func getPageData(r *http.Request) pageData {
+	query := ""
+	if len(r.URL.Query()) > 0 {
+		query = "?" + r.URL.Query().Encode()
+	}
+
 	return pageData{
 		OldHost:           r.Host,
 		NewHost:           newHost,
-		NewURL:            fmt.Sprintf("https://%s%s?%s", newHost, r.URL.Path, r.URL.Query().Encode()),
+		NewURL:            fmt.Sprintf("https://%s%s%s", newHost, r.URL.Path, query),
 		MoreInfoURL:       moreInfoURL,
 		RedirectEndDate:   redirectEndDate,
 		AdditionalMessage: additionalMessage,
