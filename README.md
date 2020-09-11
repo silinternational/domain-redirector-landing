@@ -34,6 +34,8 @@ _OPTIONAL:_
  - `MORE_INFO_URL` - If this URL is provided, a message is added to the page that says 
    `<p>Learn more about this change at: <a target="_blank" href="{{.MoreInfoURL}}">{{.MoreInfoURL}}</a></p>`
    
+ - `SKIP_LANDING_PAGE` - If set to `true` users will be automatically redirected without seeing the landing page
+   
 ## Running Locally
 Just run `docker-compose up -d`. Feel free to edit environment variables in the `docker-compose.yml` file
 first if you like. 
