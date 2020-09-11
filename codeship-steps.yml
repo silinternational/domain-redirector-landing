@@ -1,6 +1,6 @@
 - name: test
   service: test
-  command: go test .
+  command: go test -v .
 
 - name: push
   service: binary

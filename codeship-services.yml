@@ -4,7 +4,7 @@ test:
     dockerfile: ./Dockerfile-dev
   cached: true
   working_dir: /src
-  command: go test
+  command: go test -v .
 
 binary:
   build:
