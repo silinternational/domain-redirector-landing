@@ -1,0 +1,13 @@
+test:
+  build:
+    image: tests
+    dockerfile: ./Dockerfile-dev
+  cached: true
+  working_dir: /src
+  command: go test
+
+binary:
+  build:
+    image: silintl/domain-redirector-landing
+    dockerfile: ./Dockerfile
+  cached: true
