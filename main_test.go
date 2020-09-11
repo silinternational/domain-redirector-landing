@@ -10,7 +10,7 @@ import (
 )
 
 func clearEnv(t *testing.T) {
-	vars := []string{"NEW_HOST", "PORT", "MORE_INFO_URL", "REDIRECT_END_DATE", "ADDITIONAL_MESSAGE"}
+	vars := []string{"NEW_HOST", "PORT", "MORE_INFO_URL", "REDIRECT_END_DATE", "ADDITIONAL_MESSAGE", "SKIP_LANDING_PAGE"}
 	for _, k := range vars {
 		if err := os.Unsetenv(k); err != nil {
 			t.Errorf("failed to unset env var %s: %s", k, err.Error())
@@ -46,7 +46,7 @@ func Test_serveTemplate(t *testing.T) {
 				r: httptest.NewRequest(http.MethodGet, "https://old.url.com/path/to/page", nil),
 			},
 			envConfig:  map[string]string{"NEW_HOST": "new.url.com"},
-			wantStatus: 200,
+			wantStatus: http.StatusOK,
 			wantInBody: []string{
 				"<em>old.url.com</em> has changed to <em>new.url.com</em>",
 				"href=\"https://new.url.com/path/to/page\"",
@@ -67,7 +67,7 @@ func Test_serveTemplate(t *testing.T) {
 				"NEW_HOST":           "new.url.com",
 				"ADDITIONAL_MESSAGE": "y0! we've moved!",
 			},
-			wantStatus: 200,
+			wantStatus: http.StatusOK,
 			wantInBody: []string{
 				"y0! we've moved!",
 				"https://new.url.com/path/to/page",
@@ -89,7 +89,7 @@ func Test_serveTemplate(t *testing.T) {
 				"NEW_HOST":           "new.url.com",
 				"ADDITIONAL_MESSAGE": "y0! we've moved!",
 			},
-			wantStatus: 200,
+			wantStatus: http.StatusOK,
 			wantInBody: []string{
 				"y0! we've moved!",
 				"https://new.url.com/path/to/page",
@@ -114,7 +114,7 @@ func Test_serveTemplate(t *testing.T) {
 				"REDIRECT_END_DATE":  "22 Aug 2020",
 				"ADDITIONAL_MESSAGE": "Hi there, we've changed old.url.com to new.url.com, get with the program!",
 			},
-			wantStatus: 200,
+			wantStatus: http.StatusOK,
 			wantInBody: []string{
 				"https://moreinforurl.com",
 				"href=\"https://new.url.com/path/to/page?param1=something&amp;param2=something&#43;else\"",
@@ -125,6 +125,19 @@ func Test_serveTemplate(t *testing.T) {
 				"<em>old.url.com</em> has changed to <em>new.url.com</em>",
 				"https://old.url.com/path/to/page?param1=something&param2=something%20else",
 			},
+		},
+		{
+			name: "skip landing page",
+			args: args{
+				w: httptest.NewRecorder(),
+				r: httptest.NewRequest(http.MethodGet, "https://old.url.com/path/to/page?param1=something&param2=something%20else", nil),
+			},
+			envConfig: map[string]string{
+				"NEW_HOST":          "new.url.com",
+				"PORT":              "8080",
+				"SKIP_LANDING_PAGE": "true",
+			},
+			wantStatus: http.StatusMovedPermanently,
 		},
 	}
 	for _, tt := range tests {

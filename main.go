@@ -6,6 +6,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strconv"
 )
 
 var (
@@ -14,6 +15,7 @@ var (
 	moreInfoURL       string
 	port              string
 	redirectEndDate   string
+	skipLandingPage   bool
 )
 
 type pageData struct {
@@ -41,6 +43,7 @@ func loadConfig() {
 	moreInfoURL = os.Getenv("MORE_INFO_URL")
 	redirectEndDate = os.Getenv("REDIRECT_END_DATE")
 	additionalMessage = template.HTML(os.Getenv("ADDITIONAL_MESSAGE"))
+	skipLandingPage, _ = strconv.ParseBool(os.Getenv("SKIP_LANDING_PAGE"))
 }
 
 func main() {
@@ -55,6 +58,12 @@ func main() {
 
 func serveTemplate(w http.ResponseWriter, r *http.Request) {
 	data := getPageData(r)
+
+	if skipLandingPage {
+		w.Header().Set("Location", data.NewURL)
+		w.WriteHeader(http.StatusMovedPermanently)
+		return
+	}
 
 	tmpl, err := template.New("index").Parse(pageTemplate)
 	if err != nil {
