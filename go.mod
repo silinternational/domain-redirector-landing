@@ -1,3 +1,4 @@
 module github.com/silinternational/domain-redirector-landing
 
-go 1.14
+// Ensure this version tracks with Dockerfile and Dockerfile-dev
+go 1.20
