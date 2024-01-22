@@ -1,3 +1,7 @@
+# End of Life
+
+This project is no longer maintained. 
+
 # Simple webserver / redirector for use when a domain changes
 
 Sometimes hostnames need to change. In the past we've run automatic redirector services
